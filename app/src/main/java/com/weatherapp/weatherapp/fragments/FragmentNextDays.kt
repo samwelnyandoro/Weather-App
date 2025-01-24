@@ -130,12 +130,12 @@ class FragmentNextDays : BottomSheetDialogFragment(), LocationListener {
                         rvListWeather?.visibility = View.VISIBLE
                     } catch (e: JSONException) {
                         e.printStackTrace()
-                        Toast.makeText(activity, "Gagal menampilkan data!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activity, "Failed to display data!", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onError(anError: ANError) {
-                    Toast.makeText(activity, "Tidak ada jaringan internet!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "No internet network!", Toast.LENGTH_SHORT).show()
                 }
             })
     }

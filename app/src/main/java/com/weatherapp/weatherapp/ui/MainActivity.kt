@@ -31,6 +31,7 @@ import com.weatherapp.weatherapp.R
 import com.weatherapp.weatherapp.adapter.MainAdapter
 import com.weatherapp.weatherapp.api.Apiservice
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
+import com.weatherapp.weatherapp.databinding.ToolbarBinding
 import com.weatherapp.weatherapp.fragments.FragmentNextDays
 import com.weatherapp.weatherapp.model.ModelMain
 import org.json.JSONException
@@ -43,11 +44,12 @@ import java.util.Locale
 class MainActivity : AppCompatActivity(), LocationListener {
     private var lat: Double? = null
     private var lng: Double? = null
-    private var hariIni: String? = null
+    private var today: String? = null
     private var mProgressBar: ProgressDialog? = null
     private var mainAdapter: MainAdapter? = null
     private val modelMain: MutableList<ModelMain> = ArrayList()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var toolbarBinding: ToolbarBinding
     var permissionArrays = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION
@@ -64,6 +66,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        toolbarBinding = ToolbarBinding.bind(findViewById(R.id.toolbarLayout))
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
         }
@@ -91,12 +94,12 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
 
         val dateNow = Calendar.getInstance().time
-        hariIni = DateFormat.format("EEE", dateNow) as String
+        today = DateFormat.format("EEE", dateNow) as String
 
         mProgressBar = ProgressDialog(this).apply {
-            setTitle("Mohon Tunggu")
+            setTitle("Please wait")
             setCancelable(false)
-            setMessage("Sedang menampilkan data...")
+            setMessage("Currently displaying data...")
         }
 
         val fragmentNextDays = FragmentNextDays.newInstance("FragmentNextDays")
@@ -123,8 +126,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     private fun getToday() {
         val date = Calendar.getInstance().time
-        val tanggal = DateFormat.format("d MMM yyyy", date) as String
-        val formatDate = "$hariIni, $tanggal"
+        val tdate = DateFormat.format("d MMM yyyy", date) as String
+        val formatDate = "$today, $tdate"
         binding.tvDate.text = formatDate
     }
 
@@ -180,24 +183,24 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         val jsonObjectThree = response.getJSONObject("wind")
                         val strWeather = jsonObjectOne.getString("main")
                         val strDescWeather = jsonObjectOne.getString("description")
-                        val strKecepatanAngin = jsonObjectThree.getString("speed")
-                        val strKelembaban = jsonObjectTwo.getString("humidity")
-                        val strNamaKota = response.getString("name")
-                        val dblTemperatur = jsonObjectTwo.getDouble("temp")
+                        val strWindvelocity = jsonObjectThree.getString("speed")
+                        val strHumidity = jsonObjectTwo.getString("humidity")
+                        val strName = response.getString("name")
+                        val dblTemperature = jsonObjectTwo.getDouble("temp")
 
                         binding.iconTemp.setAnimation(getWeatherAnimation(strDescWeather))
                         binding.tvWeather.text = getWeatherDescription(strDescWeather)
-                        binding.tvNamaKota.text = strNamaKota
-                        binding.tvTempeatur.text =
-                            String.format(Locale.getDefault(), "%.0f°C", dblTemperatur)
-                        binding.tvKecepatanAngin.text =
-                            "Kecepatan Angin $strKecepatanAngin km/j"
-                        binding.tvKelembaban.text = "Kelembaban $strKelembaban %"
+                        toolbarBinding.tvNamaKota.text = strName
+                        binding.tvTemperature.text =
+                            String.format(Locale.getDefault(), "%.0f°C", dblTemperature)
+                        binding.tvWindvelocity.text =
+                            "Wind Velocity $strWindvelocity km/j"
+                        binding.tvHumidity.text = "Humidity $strHumidity %"
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         Toast.makeText(
                             this@MainActivity,
-                            "Gagal menampilkan data header!",
+                            "Failed to display header data!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -206,7 +209,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 override fun onError(anError: ANError) {
                     Toast.makeText(
                         this@MainActivity,
-                        "Tidak ada jaringan internet!",
+                        "No internet network!",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -254,7 +257,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         e.printStackTrace()
                         Toast.makeText(
                             this@MainActivity,
-                            "Gagal menampilkan data!",
+                            "Failed to display data!",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -264,7 +267,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                     mProgressBar?.dismiss()
                     Toast.makeText(
                         this@MainActivity,
-                        "Tidak ada jaringan internet!",
+                        "No internet network!",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -288,15 +291,15 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     private fun getWeatherDescription(description: String): String {
         return when (description) {
-            "broken clouds" -> "Awan Tersebar"
-            "light rain" -> "Gerimis"
-            "haze" -> "Berkabut"
-            "overcast clouds" -> "Awan Mendung"
-            "moderate rain" -> "Hujan Ringan"
-            "few clouds" -> "Berawan"
-            "heavy intensity rain" -> "Hujan Lebat"
-            "clear sky" -> "Cerah"
-            "scattered clouds" -> "Awan Tersebar"
+            "broken clouds" -> "Scattered Clouds"
+            "light rain" -> "Drizzling"
+            "haze" -> "Foggy"
+            "overcast clouds" -> "Overcast Clouds"
+            "moderate rain" -> "Light rain"
+            "few clouds" -> "Cloudy"
+            "heavy intensity rain" -> "Heavy rain"
+            "clear sky" -> "Sunny"
+            "scattered clouds" -> "Scattered Clouds"
             else -> description
         }
     }
