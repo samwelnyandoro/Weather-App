@@ -19,12 +19,24 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("debug") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "OPENWEATHERMAP_BASEURL", "\"${project.findProperty("OPENWEATHERMAP_BASEURL") ?: ""}\"")
+            buildConfigField("String", "OPENWEATHERMAP_API_KEY", "\"${project.findProperty("OPENWEATHERMAP_API_KEY") ?: ""}\"")
+        }
+
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            buildConfigField("String", "OPENWEATHERMAP_BASEURL", "\"${project.findProperty("OPENWEATHERMAP_BASEURL") ?: ""}\"")
+            buildConfigField("String", "OPENWEATHERMAP_API_KEY", "\"${project.findProperty("OPENWEATHERMAP_API_KEY") ?: ""}\"")
         }
     }
     compileOptions {
@@ -36,6 +48,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
