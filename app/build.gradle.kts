@@ -56,4 +56,5 @@ dependencies {
     //scalable size unit¬¬support for different screen sizes
     implementation (libs.ssp.android)
     implementation (libs.sdp.android)
+    implementation (libs.koin.android)
 }

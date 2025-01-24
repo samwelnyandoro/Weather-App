@@ -36,12 +36,22 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.cooltechworks.views.shimmer.ShimmerRecyclerView
-                    android:id="@+id/rvListWeather"
+                <!-- ShimmerFrameLayout for the shimmer effect -->
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:shimmer_demo_angle="20"
-                    app:shimmer_demo_shimmer_color="#73ffffff" />
+                    app:shimmer_auto_start="true"
+                    app:shimmer_duration="1500">
+
+                    <!-- RecyclerView inside ShimmerFrameLayout -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvListWeather"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="vertical" />
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
             </LinearLayout>
 

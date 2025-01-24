@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.weatherapp.weatherapp.R
 import com.weatherapp.weatherapp.databinding.ListItemNextDaysBinding
+import com.weatherapp.weatherapp.model.ModelNextDay
 import java.util.*
 
 class NextDayAdapter(
