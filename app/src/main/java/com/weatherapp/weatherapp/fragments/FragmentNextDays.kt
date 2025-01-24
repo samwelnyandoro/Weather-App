@@ -23,7 +23,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.weatherapp.weatherapp.api.apiservice
+import com.weatherapp.weatherapp.api.Apiservice
 import com.weatherapp.weatherapp.model.ModelNextDay
 import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONException
@@ -97,7 +97,7 @@ class FragmentNextDays : BottomSheetDialogFragment(), LocationListener {
     }
 
     private fun getListWeather() {
-        AndroidNetworking.get(apiservice.BASEURL + apiservice.Daily + "lat=" + lat + "&lon=" + lng + apiservice.UnitsAppidDaily)
+        AndroidNetworking.get(Apiservice.BASEURL + Apiservice.Daily + "lat=" + lat + "&lon=" + lng + Apiservice.UnitsAppidDaily)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {

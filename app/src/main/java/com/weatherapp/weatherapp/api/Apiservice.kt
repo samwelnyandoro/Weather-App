@@ -1,6 +1,6 @@
 package com.weatherapp.weatherapp.api
 
-object apiservice {
+object Apiservice {
     var BASEURL = "http://api.openweathermap.org/data/2.5/"
     var CurrentWeather = "weather?"
     var ListWeather = "forecast?"

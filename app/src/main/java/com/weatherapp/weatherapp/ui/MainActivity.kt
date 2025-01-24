@@ -28,8 +28,11 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.weatherapp.weatherapp.R
-import com.weatherapp.weatherapp.api.apiservice
+import com.weatherapp.weatherapp.adapter.MainAdapter
+import com.weatherapp.weatherapp.api.Apiservice
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
+import com.weatherapp.weatherapp.fragments.FragmentNextDays
+import com.weatherapp.weatherapp.model.ModelMain
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.ParseException
@@ -145,11 +148,11 @@ class MainActivity : AppCompatActivity(), LocationListener {
         val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         val criteria = Criteria()
         val provider = locationManager.getBestProvider(criteria, true)
-        val location = locationManager.getLastKnownLocation(provider)
+        val location = locationManager.getLastKnownLocation(provider.toString())
         if (location != null) {
             onLocationChanged(location)
         } else {
-            locationManager.requestLocationUpdates(provider, 20000, 0f, this)
+            locationManager.requestLocationUpdates(provider.toString(), 20000, 0f, this)
         }
     }
 
@@ -164,7 +167,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     private fun getCurrentWeather() {
         AndroidNetworking.get(
-            apiservice.BASEURL + apiservice.CurrentWeather + "lat=" + lat + "&lon=" + lng + apiservice.UnitsAppid
+            Apiservice.BASEURL + Apiservice.CurrentWeather + "lat=" + lat + "&lon=" + lng + Apiservice.UnitsAppid
         )
             .setPriority(Priority.MEDIUM)
             .build()
@@ -213,7 +216,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private fun getListWeather() {
         mProgressBar?.show()
         AndroidNetworking.get(
-            apiservice.BASEURL + apiservice.ListWeather + "lat=" + lat + "&lon=" + lng + apiservice.UnitsAppid
+            Apiservice.BASEURL + Apiservice.ListWeather + "lat=" + lat + "&lon=" + lng + Apiservice.UnitsAppid
         )
             .setPriority(Priority.MEDIUM)
             .build()
