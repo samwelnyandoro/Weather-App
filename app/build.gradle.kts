@@ -49,20 +49,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    //viewmodel
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    //coil
-    implementation(libs.coil)
-    //retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    //okhttp
-    implementation(libs.okhttp)
-    //koin
-    implementation(libs.koin.android)
-    //navigation component
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
+    implementation (libs.android.networking)
+    implementation (libs.com.amulyakhare.textdrawable)
+    implementation (libs.shimmerrecyclerview)
+    implementation (libs.lottie)
     //scalable size unit¬¬support for different screen sizes
     implementation (libs.ssp.android)
     implementation (libs.sdp.android)
