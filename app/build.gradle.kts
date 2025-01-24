@@ -49,8 +49,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation (libs.android.networking)
-    implementation (libs.com.amulyakhare.textdrawable)
+    implementation(libs.android.networking)
+    implementation (libs.coil.kt.coil)
     implementation (libs.shimmerrecyclerview)
     implementation (libs.lottie)
     //scalable size unit¬¬support for different screen sizes
