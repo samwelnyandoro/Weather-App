@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textCurrentDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/sonic_silver"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Today, 24th December 2025" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageLocation"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
+        android:layout_marginTop="@dimen/_19sdp"
+        android:src="@drawable/location_on_24px"
+        android:tint="@color/sonic_silver"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textCurrentDate" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
