@@ -51,7 +51,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.android.networking)
     implementation (libs.coil.kt.coil)
-    implementation (libs.shimmerrecyclerview)
+    implementation (libs.shimmer)
     implementation (libs.lottie)
     //scalable size unit¬¬support for different screen sizes
     implementation (libs.ssp.android)
