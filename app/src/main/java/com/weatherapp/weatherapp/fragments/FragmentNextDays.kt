@@ -9,6 +9,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,36 +42,26 @@ class FragmentNextDays : BottomSheetDialogFragment(), LocationListener {
     var fabClose: FloatingActionButton? = null
     var modelNextDays: MutableList<ModelNextDay> = ArrayList()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        (view?.parent as View).setBackgroundColor(Color.TRANSPARENT)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (view.parent as View).setBackgroundColor(Color.TRANSPARENT)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_next_day, container, false)
-
-        // Initialize views
         shimmerLayout = rootView.findViewById(R.id.shimmerLayout)
         rvListWeather = rootView.findViewById(R.id.rvListWeather)
         fabClose = rootView.findViewById(R.id.fabClose)
-
-        // Set up RecyclerView
         nextDayAdapter = NextDayAdapter(requireActivity(), modelNextDays)
         rvListWeather?.layoutManager = LinearLayoutManager(activity)
         rvListWeather?.setHasFixedSize(true)
         rvListWeather?.adapter = nextDayAdapter
-
-        // Start shimmer effect
         shimmerLayout?.startShimmer()
-
-        // Close FAB action
         fabClose?.setOnClickListener {
             dismiss()
         }
-
         // Get LatLong
         getLatLong()
-
         return rootView
     }
 
@@ -90,8 +81,7 @@ class FragmentNextDays : BottomSheetDialogFragment(), LocationListener {
     override fun onLocationChanged(location: Location) {
         lng = location.longitude
         lat = location.latitude
-        Handler().postDelayed({
-            // Get Weather Data
+        Handler(Looper.getMainLooper()).postDelayed({
             getListWeather()
         }, 3000)
     }
