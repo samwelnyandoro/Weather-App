@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         binding.tvTemperature.text =
                             String.format(Locale.getDefault(), "%.0f°C", dblTemperature)
                         binding.tvWindvelocity.text =
-                            "Wind Velocity $strWindvelocity km/j"
+                            "Wind Velocity $strWindvelocity km/h"
                         binding.tvHumidity.text = "Humidity $strHumidity %"
                     } catch (e: JSONException) {
                         e.printStackTrace()
