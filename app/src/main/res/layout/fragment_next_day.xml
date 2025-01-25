@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="60dp"
+            android:contentDescription="@string/fab_close"
             app:backgroundTint="@color/colorAccent"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_close" />

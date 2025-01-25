@@ -171,9 +171,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         toolbarBinding.tvName.text = strName
                         binding.tvTemperature.text =
                             String.format(Locale.getDefault(), "%.0f°C", dblTemperature)
-                        binding.tvWindvelocity.text =
-                            "Wind Velocity $strWindvelocity km/h"
-                        binding.tvHumidity.text = "Humidity $strHumidity %"
+                        binding.tvWindvelocity.text = getString(R.string.wind_velocity, strWindvelocity)
+                        binding.tvHumidity.text = getString(R.string.humidityy, strHumidity)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         Toast.makeText(

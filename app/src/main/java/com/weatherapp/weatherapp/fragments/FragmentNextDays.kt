@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.weatherapp.weatherapp.fragments
 
 import android.annotation.SuppressLint
@@ -60,7 +62,6 @@ class FragmentNextDays : BottomSheetDialogFragment(), LocationListener {
         fabClose?.setOnClickListener {
             dismiss()
         }
-        // Get LatLong
         getLatLong()
         return rootView
     }
@@ -91,6 +92,7 @@ class FragmentNextDays : BottomSheetDialogFragment(), LocationListener {
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
+                @SuppressLint("SimpleDateFormat")
                 override fun onResponse(response: JSONObject) {
                     try {
                         val jsonArray = response.getJSONArray("list")

@@ -7,4 +7,7 @@
     <string name="date">Friday, January 25</string>
     <string name="foggy">Foggy</string>
     <string name="temperature">20°C</string>
+    <string name="wind_velocity">Wind Velocity %1$s km/h</string>
+    <string name="humidityy">Humidity %1$s %%</string>
+    <string name="fab_close">FAB CLOSE</string>
 </resources>
