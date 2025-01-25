@@ -130,6 +130,7 @@ class FragmentNextDays : BottomSheetDialogFragment(), LocationListener {
             })
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onStatusChanged(s: String, i: Int, bundle: Bundle) {}
     override fun onProviderEnabled(s: String) {}
     override fun onProviderDisabled(s: String) {}
