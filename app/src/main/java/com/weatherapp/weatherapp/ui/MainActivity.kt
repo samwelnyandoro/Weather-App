@@ -1,6 +1,7 @@
 package com.weatherapp.weatherapp.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.pm.PackageManager
@@ -118,8 +119,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
         binding.fabNextDays.setOnClickListener {
             fragmentNextDays.show(supportFragmentManager, fragmentNextDays.tag)
         }
-
-        // Method to get LatLong & Date
         getToday()
         getLatlong()
     }
@@ -162,8 +161,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
     override fun onLocationChanged(location: Location) {
         lng = location.longitude
         lat = location.latitude
-
-        // Method to get Data Weather
         getCurrentWeather()
         getListWeather()
     }
@@ -190,7 +187,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
                         binding.iconTemp.setAnimation(getWeatherAnimation(strDescWeather))
                         binding.tvWeather.text = getWeatherDescription(strDescWeather)
-                        toolbarBinding.tvNamaKota.text = strName
+                        toolbarBinding.tvName.text = strName
                         binding.tvTemperature.text =
                             String.format(Locale.getDefault(), "%.0f°C", dblTemperature)
                         binding.tvWindvelocity.text =
@@ -314,6 +311,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         return result == PackageManager.PERMISSION_GRANTED
     }
 
+    @SuppressLint("UnsafeIntentLaunch")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         for (grantResult in grantResults) {
@@ -327,6 +325,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onStatusChanged(s: String?, i: Int, bundle: Bundle?) {}
     override fun onProviderEnabled(provider: String) {}
     override fun onProviderDisabled(provider: String) {}
