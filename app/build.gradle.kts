@@ -62,7 +62,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation (libs.play.services.location)
     implementation(libs.android.networking)
     implementation (libs.coil.kt.coil)
     implementation (libs.shimmer)
