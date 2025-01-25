@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.weatherapp.weatherapp.ui
 
 import android.Manifest
@@ -5,7 +7,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationListener
@@ -13,8 +14,6 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
