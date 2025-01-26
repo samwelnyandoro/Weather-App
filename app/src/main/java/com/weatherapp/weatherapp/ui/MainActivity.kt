@@ -228,13 +228,13 @@ class MainActivity : AppCompatActivity() {
                             tvWind.text = "${data.wind.speed} KM/H"
                             tvLocation.text = "${data.name}\n${data.sys.country}"
                             tvTemp.text = "${data.main.temp.toInt()}°C"
-                            tvFeelsLike.text = "Feels like: ${data.main.feels_like.toInt()}°C"
-                            tvMinTemp.text = "Min temp: ${data.main.temp_min.toInt()}°C"
-                            tvMaxTemp.text = "Max temp: ${data.main.temp_max.toInt()}°C"
+                            tvFeelsLike.text = getString(R.string.feels_likee, data.main.feels_like.toInt())
+                            tvMinTemp.text = getString(R.string.min_temp_show, data.main.temp_min.toInt())  // Convert min temp to Int
+                            tvMaxTemp.text = getString(R.string.max_temp_show, data.main.temp_max.toInt())
                             tvHumidity.text = "${data.main.humidity} %"
                             tvRealfeel.text = "${data.main.feels_like.toInt()}°C"
                             tvPressure.text = "${data.main.pressure} hPa"
-                            tvUpdateTime.text = "Last Update: ${dateFormatConverter(data.dt.toLong())}"
+                            tvUpdateTime.text = getString(R.string.last_update, dateFormatConverter(data.dt.toLong()))
                         }
                     }
                 } else {

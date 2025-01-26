@@ -33,4 +33,9 @@
     <string name="real_feel">Real feel: %1$d°C</string>
     <string name="pressure_show">Pressure: %1$d hPa</string>
     <string name="last_update">Last Update: %1$s</string>
+    <string name="feels_likee">Feels like: %1$d°C</string>
+    <string name="forecast_time">forecast time</string>
+    <string name="forecast_weather">forecast weather</string>
+    <string name="temperature_modest">Temperature</string>
+    <string name="five_day_forecast">Five days forecast</string>
 </resources>
