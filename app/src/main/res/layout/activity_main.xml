@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/location"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/_25ssp"
             android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/updated_at"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/_20ssp" />
 
         <androidx.cardview.widget.CardView
@@ -97,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/clear_sky"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/_24ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sdp"
             android:text="@string/_24_c"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/_50ssp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/img_weather"
@@ -123,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/min_temp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/_20ssp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_max_temp"
             app:layout_constraintEnd_toStartOf="@+id/tv_max_temp"
@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:text="@string/max_temp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/_20ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -161,7 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_30sdp"
             android:text="@string/feels_like"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/_20ssp"
             app:layout_constraintEnd_toEndOf="@+id/img_weather"
             app:layout_constraintStart_toStartOf="@+id/tv_temp"
