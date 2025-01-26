@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("kotlin-kapt")
 }
 
 android {
@@ -73,8 +74,10 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     // Picasso
     implementation(libs.picasso)
-    // BarChart
-    implementation(libs.mpandroidchart)
     // Location
     implementation(libs.play.services.location)
+    // offline storage
+    implementation (libs.androidx.room.runtime)
+    kapt (libs.androidx.room.compiler)
+    implementation (libs.androidx.room.ktx)
 }
