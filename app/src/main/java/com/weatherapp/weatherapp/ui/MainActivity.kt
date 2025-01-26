@@ -2,6 +2,7 @@ package com.weatherapp.weatherapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -20,10 +21,13 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.weatherapp.weatherapp.R
 import com.weatherapp.weatherapp.adapter.RvAdapter
+import com.weatherapp.weatherapp.data.forecastModels.Forecast
 import com.weatherapp.weatherapp.data.forecastModels.ForecastData
+import com.weatherapp.weatherapp.data.weatherModels.CurrentWeather
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
 import com.weatherapp.weatherapp.databinding.BottomSheetLayoutBinding
 import com.weatherapp.weatherapp.localstorage.database.WeatherDatabase
@@ -128,6 +132,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun getForecast() {
         lifecycleScope.launch(Dispatchers.IO) {
+            // Try fetching from API
             val response = try {
                 RetrofitInstance.api.getForecast(
                     city,
@@ -135,28 +140,48 @@ class MainActivity : AppCompatActivity() {
                     applicationContext.getString(R.string.api_key)
                 )
             } catch (e: IOException) {
-                Toast.makeText(applicationContext, "app error ${e.message}", Toast.LENGTH_SHORT)
-                    .show()
+                showToast("app error: ${e.message}")
+                loadCachedForecast()
                 return@launch
             } catch (e: HttpException) {
-                Toast.makeText(applicationContext, "http error ${e.message}", Toast.LENGTH_SHORT)
-                    .show()
+                showToast("http error: ${e.message}")
+                loadCachedForecast()
                 return@launch
             }
+
             if (response.isSuccessful && response.body() != null) {
                 withContext(Dispatchers.Main) {
                     val data = response.body()!!
-                    val forecastArray: ArrayList<ForecastData> = data.list as ArrayList<ForecastData>
+                    saveToLocalStorage("forecast", data)
+
+                    val forecastArray = data.list as ArrayList<ForecastData>
                     val adapter = RvAdapter(forecastArray)
                     sheetLayoutBinding.rvForecast.adapter = adapter
                     sheetLayoutBinding.tvSheet.text = "Five days forecast in ${data.city.name}"
                 }
+            } else {
+                loadCachedForecast()
             }
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    private suspend fun loadCachedForecast() {
+        val cachedData = getFromLocalStorage("forecast", Forecast::class.java)
+        if (cachedData != null) {
+            withContext(Dispatchers.Main) {
+                val forecastArray = cachedData.list as ArrayList<ForecastData>
+                val adapter = RvAdapter(forecastArray)
+                sheetLayoutBinding.rvForecast.adapter = adapter
+                sheetLayoutBinding.tvSheet.text = "Five days forecast in ${cachedData.city.name}"
+            }
+        } else {
+            showToast("No cached forecast data available.")
+        }
+    }
+
+
     @OptIn(DelicateCoroutinesApi::class)
+    @SuppressLint("SetTextI18n")
     private fun getCurrentWeather(city: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val response = try {
@@ -166,29 +191,27 @@ class MainActivity : AppCompatActivity() {
                     applicationContext.getString(R.string.api_key)
                 )
             } catch (e: IOException) {
-                Toast.makeText(applicationContext, "app error ${e.message}", Toast.LENGTH_SHORT)
-                    .show()
+                showToast("app error: ${e.message}")
+                loadCachedWeather()
                 return@launch
             } catch (e: HttpException) {
-                Toast.makeText(applicationContext, "http error ${e.message}", Toast.LENGTH_SHORT)
-                    .show()
+                showToast("http error: ${e.message}")
+                loadCachedWeather()
                 return@launch
             }
 
             if (response.isSuccessful && response.body() != null) {
                 withContext(Dispatchers.Main) {
                     val data = response.body()!!
+                    saveToLocalStorage("current_weather", data)
+
+                    // Update UI
                     val iconId = data.weather[0].icon
                     val imgUrl = "https://openweathermap.org/img/wn/$iconId@4x.png"
                     Picasso.get().load(imgUrl).into(binding.imgWeather)
-                    binding.tvSunset.text =
-                        dateFormatConverter(
-                            data.sys.sunset.toLong()
-                        )
-                    binding.tvSunrise.text =
-                        dateFormatConverter(
-                            data.sys.sunrise.toLong()
-                        )
+
+                    binding.tvSunset.text = dateFormatConverter(data.sys.sunset.toLong())
+                    binding.tvSunrise.text = dateFormatConverter(data.sys.sunrise.toLong())
                     binding.apply {
                         tvStatus.text = data.weather[0].description
                         tvWind.text = "${data.wind.speed} KM/H"
@@ -200,17 +223,60 @@ class MainActivity : AppCompatActivity() {
                         tvHumidity.text = "${data.main.humidity} %"
                         tvRealfeel.text = "${data.main.feels_like.toInt()}°C"
                         tvPressure.text = "${data.main.pressure} hPa"
-                        tvUpdateTime.text = "Last Update: ${
-                            dateFormatConverter(
-                                data.dt.toLong()
-                            )
-                        }"
+                        tvUpdateTime.text = "Last Update: ${dateFormatConverter(data.dt.toLong())}"
                     }
-
                 }
+            } else {
+                loadCachedWeather()
             }
         }
     }
+
+    private suspend fun loadCachedWeather() {
+        val cachedData = getFromLocalStorage("current_weather", CurrentWeather::class.java)
+        if (cachedData != null) {
+            withContext(Dispatchers.Main) {
+                // Update UI using cached data
+                binding.tvSunset.text = dateFormatConverter(cachedData.sys.sunset.toLong())
+                binding.tvSunrise.text = dateFormatConverter(cachedData.sys.sunrise.toLong())
+                binding.apply {
+                    tvStatus.text = cachedData.weather[0].description
+                    tvWind.text = "${cachedData.wind.speed} KM/H"
+                    tvLocation.text = "${cachedData.name}\n${cachedData.sys.country}"
+                    tvTemp.text = "${cachedData.main.temp.toInt()}°C"
+                    tvFeelsLike.text = "Feels like: ${cachedData.main.feels_like.toInt()}°C"
+                    tvMinTemp.text = "Min temp: ${cachedData.main.temp_min.toInt()}°C"
+                    tvMaxTemp.text = "Max temp: ${cachedData.main.temp_max.toInt()}°C"
+                    tvHumidity.text = "${cachedData.main.humidity} %"
+                    tvRealfeel.text = "${cachedData.main.feels_like.toInt()}°C"
+                    tvPressure.text = "${cachedData.main.pressure} hPa"
+                    tvUpdateTime.text = "Last Update: ${dateFormatConverter(cachedData.dt.toLong())}"
+                }
+            }
+        } else {
+            showToast("No cached weather data available.")
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private val sharedPreferences by lazy {
+        getSharedPreferences("weather_app", Context.MODE_PRIVATE)
+    }
+
+    private fun saveToLocalStorage(key: String, data: Any) {
+        val json = Gson().toJson(data)
+        sharedPreferences.edit().putString(key, json).apply()
+    }
+
+    private fun <T> getFromLocalStorage(key: String, classType: Class<T>): T? {
+        val json = sharedPreferences.getString(key, null)
+        return if (json != null) Gson().fromJson(json, classType) else null
+    }
+
+
 
     private fun dateFormatConverter(date: Long): String {
         return SimpleDateFormat(
