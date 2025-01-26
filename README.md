@@ -103,7 +103,7 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 2. **🏛️ Architecture**:
    - Used MVVM (Model-View-ViewModel) architecture to separate concerns.
    - Implemented Retrofit for API calls and LiveData for reactive UI updates.
-   - Added Room for offline data persistence.
+   - Added SharedPreferences for offline data persistence.
 
 3. **🛠️ Implementation**:
    - Integrated OpenWeather API using Retrofit and Gson.
@@ -123,7 +123,7 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
    - **✅ Solution**: Used Gson for efficient deserialization and created data classes for mapping JSON responses.
 
 4. **🚧 Challenge**: Managing offline access to weather data.
-   - **✅ Solution**: Used Room to store fetched weather data locally and provide access even when the device is offline.
+   - **✅ Solution**: Used SharedPreferences to store fetched weather data locally and provide access even when the device is offline.
 
 ## 🤝 Contributing
 
