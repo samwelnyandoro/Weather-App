@@ -1,349 +1,319 @@
-@file:Suppress("DEPRECATION")
-
 package com.weatherapp.weatherapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.ProgressDialog
 import android.content.pm.PackageManager
-import android.location.Criteria
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.net.ConnectivityManager
 import android.os.Build
-import android.os.Bundle
-import android.text.format.DateFormat
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.JSONObjectRequestListener
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.squareup.picasso.Picasso
 import com.weatherapp.weatherapp.R
-import com.weatherapp.weatherapp.adapter.MainAdapter
-import com.weatherapp.weatherapp.api.Apiservice
+import com.weatherapp.weatherapp.adapter.RvAdapter
+import com.weatherapp.weatherapp.data.forecastModels.ForecastData
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
-import com.weatherapp.weatherapp.databinding.ToolbarBinding
-import org.json.JSONException
-import org.json.JSONObject
-import java.text.ParseException
+import com.weatherapp.weatherapp.databinding.BottomSheetLayoutBinding
+import com.weatherapp.weatherapp.fragment.PollutionFragment
+import com.weatherapp.weatherapp.utils.RetrofitInstance
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
-class MainActivity : AppCompatActivity(), LocationListener {
-    private var lat: Double? = null
-    private var lng: Double? = null
-    private var today: String? = null
-    private var mProgressBar: ProgressDialog? = null
-    private var mainAdapter: MainAdapter? = null
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private val modelMain: MutableList<ModelMain> = ArrayList()
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var toolbarBinding: ToolbarBinding
-    var permissionArrays = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    )
-    @RequiresApi(Build.VERSION_CODES.M)
+
+    private lateinit var sheetLayoutBinding: BottomSheetLayoutBinding
+
+    private lateinit var dialog: BottomSheetDialog
+
+    lateinit var pollutionFragment: PollutionFragment
+
+    private var city: String = "berlin"
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
         binding = ActivityMainBinding.inflate(layoutInflater)
+        sheetLayoutBinding = BottomSheetLayoutBinding.inflate(layoutInflater)
+        dialog = BottomSheetDialog(this, R.style.BottomSheetTheme)
+        dialog.setContentView(sheetLayoutBinding.root)
         setContentView(binding.root)
-        toolbarBinding = ToolbarBinding.bind(findViewById(R.id.toolbarLayout))
-        val myVersion = Build.VERSION.SDK_INT
-        if (myVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            if (checkIfAlreadyhavePermission() && checkIfAlreadyhavePermission2()) {
-                // Permissions granted, proceed to fetch location
-                getLatlong()
-            } else {
-                requestPermissions(permissionArrays, 101)
-            }
-        }
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
-        swipeRefreshLayout.setOnRefreshListener {
-            if (isNetworkConnected()) {
-                // Call methods to refresh weather data
-                getCurrentWeather()
-                getListWeather()
-            } else {
-                // Show a message if there is no internet
-                Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+
+        pollutionFragment = PollutionFragment()
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
+        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+
+                if (query!= null){
+                    city = query
+                }
+                getCurrentWeather(city)
+                return true
             }
 
-            // After data is fetched or error occurs, stop the refreshing animation
-            swipeRefreshLayout.isRefreshing = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
+
+        //fetchLocation()
+        getCurrentWeather(city)
+
+        binding.tvForecast.setOnClickListener {
+
+            openDialog()
         }
 
-
-        val dateNow = Calendar.getInstance().time
-        today = DateFormat.format("EEE", dateNow) as String
-
-        mProgressBar = ProgressDialog(this).apply {
-            setTitle("Please wait")
-            setCancelable(false)
-            setMessage("Currently displaying data...")
+        binding.tvLocation.setOnClickListener {
+            fetchLocation()
         }
 
-        val fragmentNextDays = FragmentNextDays.newInstance("FragmentNextDays")
-        mainAdapter = MainAdapter(modelMain)
-
-        binding.rvListWeather.apply {
-            layoutManager = LinearLayoutManager(
-                this@MainActivity,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            setHasFixedSize(true)
-            adapter = mainAdapter
-        }
-
-        binding.fabNextDays.setOnClickListener {
-            fragmentNextDays.show(supportFragmentManager, fragmentNextDays.tag)
-        }
-        getToday()
-        getLatlong()
     }
 
-    private fun getToday() {
-        val date = Calendar.getInstance().time
-        val tdate = DateFormat.format("d MMM yyyy", date) as String
-        val formatDate = "$today, $tdate"
-        binding.tvDate.text = formatDate
-    }
+    private fun fetchLocation() {
+        val task: Task<Location> = fusedLocationProviderClient.lastLocation
 
-    private fun getLatlong() {
+
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                115
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),101
             )
             return
         }
-        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        val criteria = Criteria()
-        val provider = locationManager.getBestProvider(criteria, true)
-        val location = locationManager.getLastKnownLocation(provider.toString())
-        if (location != null) {
-            onLocationChanged(location) // Successfully retrieved location
-        } else {
-            locationManager.requestLocationUpdates(provider.toString(), 20000, 0f, this)
+
+        task.addOnSuccessListener {
+            val geocoder=Geocoder(this,Locale.getDefault())
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                geocoder.getFromLocation(it.latitude,it.longitude,1, object: Geocoder.GeocodeListener{
+                    override fun onGeocode(addresses: MutableList<Address>) {
+                        city = addresses[0].locality
+                    }
+
+                })
+            }else{
+                val address = geocoder.getFromLocation(it.latitude,it.longitude,1) as List<Address>
+
+                city = address[0].locality
+            }
+
+            getCurrentWeather(city)
         }
     }
 
-    override fun onLocationChanged(location: Location) {
-        lng = location.longitude
-        lat = location.latitude
-        getCurrentWeather() // Fetch current weather after getting location
-        getListWeather() // Fetch weather forecast after getting location
+
+    private fun openDialog() {
+        getForecast()
+
+        sheetLayoutBinding.rvForecast.apply {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(this@MainActivity, 1, RecyclerView.HORIZONTAL, false)
+
+        }
+
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        dialog.show()
     }
 
-    private fun getCurrentWeather() {
-        AndroidNetworking.get(
-            Apiservice.BASEURL + Apiservice.CurrentWeather + "lat=" + lat + "&lon=" + lng + Apiservice.UnitsAppid
-        )
-            .setPriority(Priority.MEDIUM)
-            .build()
-            .getAsJSONObject(object : JSONObjectRequestListener {
-                override fun onResponse(response: JSONObject) {
-                    try {
-                        val jsonArrayOne = response.getJSONArray("weather")
-                        val jsonObjectOne = jsonArrayOne.getJSONObject(0)
-                        val jsonObjectTwo = response.getJSONObject("main")
-                        val jsonObjectThree = response.getJSONObject("wind")
-                        val strWeather = jsonObjectOne.getString("main")
-                        val strDescWeather = jsonObjectOne.getString("description")
-                        val strWindvelocity = jsonObjectThree.getString("speed")
-                        val strHumidity = jsonObjectTwo.getString("humidity")
-                        val strName = response.getString("name")
-                        val dblTemperature = jsonObjectTwo.getDouble("temp")
+    @OptIn(DelicateCoroutinesApi::class)
+    @SuppressLint("SetTextI18n")
+    private fun getForecast() {
+        GlobalScope.launch(Dispatchers.IO) {
+            val response = try {
+                RetrofitInstance.api.getForecast(
+                    city,
+                    "metric",
+                    applicationContext.getString(R.string.api_key)
+                )
+            } catch (e: IOException) {
+                Toast.makeText(applicationContext, "app error ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
+                return@launch
+            } catch (e: HttpException) {
+                Toast.makeText(applicationContext, "http error ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
+                return@launch
+            }
 
-                        binding.iconTemp.setAnimation(getWeatherAnimation(strDescWeather))
-                        binding.tvWeather.text = getWeatherDescription(strDescWeather)
-                        toolbarBinding.tvName.text = strName
-                        binding.tvTemperature.text =
-                            String.format(Locale.getDefault(), "%.0f°C", dblTemperature)
-                        binding.tvWindvelocity.text =
-                            "Wind Velocity $strWindvelocity km/h"
-                        binding.tvHumidity.text = "Humidity $strHumidity %"
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Failed to display header data!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+            if (response.isSuccessful && response.body() != null) {
+                withContext(Dispatchers.Main) {
+
+                    val data = response.body()!!
+
+                    val forecastArray: ArrayList<ForecastData> = data.list as ArrayList<ForecastData>
+
+                    val adapter = RvAdapter(forecastArray)
+                    sheetLayoutBinding.rvForecast.adapter = adapter
+                    sheetLayoutBinding.tvSheet.text = "Five days forecast in ${data.city.name}"
+
+                }
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun getCurrentWeather(city: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val response = try {
+                RetrofitInstance.api.getCurrentWeather(
+                    city,
+                    "metric",
+                    applicationContext.getString(R.string.api_key)
+                )
+            } catch (e: IOException) {
+                Toast.makeText(applicationContext, "app error ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
+                return@launch
+            } catch (e: HttpException) {
+                Toast.makeText(applicationContext, "http error ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
+                return@launch
+            }
+
+            if (response.isSuccessful && response.body() != null) {
+                withContext(Dispatchers.Main) {
+
+                    val data = response.body()!!
+
+                    val iconId = data.weather[0].icon
+
+                    val imgUrl = "https://openweathermap.org/img/wn/$iconId@4x.png"
+
+                    Picasso.get().load(imgUrl).into(binding.imgWeather)
+
+                    binding.tvSunset.text =
+                        dateFormatConverter(
+                            data.sys.sunset.toLong()
+                        )
+
+                    binding.tvSunrise.text =
+                        dateFormatConverter(
+                            data.sys.sunrise.toLong()
+                        )
+
+                    binding.apply {
+                        tvStatus.text = data.weather[0].description
+                        tvWind.text = "${data.wind.speed} KM/H"
+                        tvLocation.text = "${data.name}\n${data.sys.country}"
+                        tvTemp.text = "${data.main.temp.toInt()}°C"
+                        tvFeelsLike.text = "Feels like: ${data.main.feels_like.toInt()}°C"
+                        tvMinTemp.text = "Min temp: ${data.main.temp_min.toInt()}°C"
+                        tvMaxTemp.text = "Max temp: ${data.main.temp_max.toInt()}°C"
+                        tvHumidity.text = "${data.main.humidity} %"
+                        tvPressure.text = "${data.main.pressure} hPa"
+                        tvUpdateTime.text = "Last Update: ${
+                            dateFormatConverter(
+                                data.dt.toLong()
+                            )
+                        }"
+
+                        getPollution(data.coord.lat, data.coord.lon)
                     }
-                }
 
-                override fun onError(anError: ANError) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "No internet network!",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            })
+            }
+        }
     }
 
-    private fun getListWeather() {
-        mProgressBar?.show()
-        AndroidNetworking.get(
-            Apiservice.BASEURL + Apiservice.ListWeather + "lat=" + lat + "&lon=" + lng + Apiservice.UnitsAppid
-        )
-            .setPriority(Priority.MEDIUM)
-            .build()
-            .getAsJSONObject(object : JSONObjectRequestListener {
-                override fun onResponse(response: JSONObject) {
-                    try {
-                        mProgressBar?.dismiss()
-                        val jsonArray = response.getJSONArray("list")
-                        for (i in 0..6) {
-                            val dataApi = ModelMain()
-                            val objectList = jsonArray.getJSONObject(i)
-                            val jsonObjectOne = objectList.getJSONObject("main")
-                            val jsonArrayOne = objectList.getJSONArray("weather")
-                            val jsonObjectTwo = jsonArrayOne.getJSONObject(0)
-                            var timeNow = objectList.getString("dt_txt")
-                            val formatDefault = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                            val formatTimeCustom = SimpleDateFormat("kk:mm", Locale.getDefault())
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun getPollution(lat: Double, lon: Double) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val response = try {
+                RetrofitInstance.api.getPollution(
+                    lat,
+                    lon,
+                    "metric",
+                    applicationContext.getString(R.string.api_key)
+                )
+            } catch (e: IOException) {
+                Toast.makeText(applicationContext, "app error ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
+                return@launch
+            } catch (e: HttpException) {
+                Toast.makeText(applicationContext, "http error ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
+                return@launch
+            }
 
-                            try {
-                                val timesFormat = formatDefault.parse(timeNow)
-                                timeNow = formatTimeCustom.format(timesFormat)
-                            } catch (e: ParseException) {
-                                e.printStackTrace()
-                            }
+            if (response.isSuccessful && response.body() != null) {
+                withContext(Dispatchers.Main) {
 
-                            dataApi.timeNow = timeNow
-                            dataApi.currentTemp = jsonObjectOne.getDouble("temp")
-                            dataApi.descWeather = jsonObjectTwo.getString("description")
-                            dataApi.tempMin = jsonObjectOne.getDouble("temp_min")
-                            dataApi.tempMax = jsonObjectOne.getDouble("temp_max")
-                            modelMain.add(dataApi)
+                    val data = response.body()!!
+
+                    val num = data.list[0].main.aqi
+
+                    binding.tvAirQual.text = when (num) {
+                        1 -> getString(R.string.good)
+                        2 -> getString(R.string.fair)
+                        3 -> getString(R.string.moderate)
+                        4 -> getString(R.string.poor)
+                        5 -> getString(R.string.very_poor)
+                        else -> "no data"
+                    }
+                    binding.layoutPollution.setOnClickListener {
+                        val bundle = Bundle()
+                        bundle.putDouble("co",data.list[0].components.co)
+                        bundle.putDouble("nh3",data.list[0].components.nh3)
+                        bundle.putDouble("no",data.list[0].components.no)
+                        bundle.putDouble("no2",data.list[0].components.no2)
+                        bundle.putDouble("o3",data.list[0].components.o3)
+                        bundle.putDouble("pm10",data.list[0].components.pm10)
+                        bundle.putDouble("pm2_5",data.list[0].components.pm2_5)
+                        bundle.putDouble("so2",data.list[0].components.so2)
+
+                        pollutionFragment.arguments = bundle
+
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(R.id.frameLayout, pollutionFragment)
+                                .addToBackStack(null)
+                                .commit()
                         }
-                        mainAdapter?.notifyDataSetChanged()
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Failed to display data!",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 }
 
-                override fun onError(anError: ANError) {
-                    mProgressBar?.dismiss()
-                    Toast.makeText(
-                        this@MainActivity,
-                        "No internet network!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-    }
-
-    private fun getWeatherAnimation(description: String): Int {
-        return when (description) {
-            "broken clouds" -> R.raw.broken_clouds
-            "light rain" -> R.raw.light_rain
-            "haze" -> R.raw.broken_clouds
-            "overcast clouds" -> R.raw.overcast_clouds
-            "moderate rain" -> R.raw.moderate_rain
-            "few clouds" -> R.raw.few_clouds
-            "heavy intensity rain" -> R.raw.heavy_intensity
-            "clear sky" -> R.raw.clear_sky
-            "scattered clouds" -> R.raw.scattered_clouds
-            else -> R.raw.unknown
-        }
-    }
-
-    private fun getWeatherDescription(description: String): String {
-        return when (description) {
-            "broken clouds" -> "Scattered Clouds"
-            "light rain" -> "Drizzling"
-            "haze" -> "Foggy"
-            "overcast clouds" -> "Overcast Clouds"
-            "moderate rain" -> "Light rain"
-            "few clouds" -> "Cloudy"
-            "heavy intensity rain" -> "Heavy rain"
-            "clear sky" -> "Sunny"
-            "scattered clouds" -> "Scattered Clouds"
-            else -> description
-        }
-    }
-
-    private fun checkIfAlreadyhavePermission(): Boolean {
-        val result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-        return result == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun checkIfAlreadyhavePermission2(): Boolean {
-        val result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        return result == PackageManager.PERMISSION_GRANTED
-    }
-
-    @SuppressLint("UnsafeIntentLaunch")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        for (grantResult in grantResults) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                val intent = intent
-                finish()
-                startActivity(intent)
-            } else {
-                getLatlong()
             }
         }
     }
-    private fun isNetworkConnected(): Boolean {
-        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
 
-    @Deprecated("Deprecated in Java")
-    override fun onStatusChanged(s: String?, i: Int, bundle: Bundle?) {}
-    override fun onProviderEnabled(provider: String) {}
-    override fun onProviderDisabled(provider: String) {}
 
-    companion object {
-        fun setWindowFlag(activity: Activity, bits: Int, on: Boolean) {
-            val window = activity.window
-            val layoutParams = window.attributes
-            if (on) {
-                layoutParams.flags = layoutParams.flags or bits
-            } else {
-                layoutParams.flags = layoutParams.flags and bits.inv()
-            }
-            window.attributes = layoutParams
-        }
+    private fun dateFormatConverter(date: Long): String {
+
+        return SimpleDateFormat(
+            "hh:mm a",
+            Locale.ENGLISH
+        ).format(Date(date * 1000))
     }
 }
