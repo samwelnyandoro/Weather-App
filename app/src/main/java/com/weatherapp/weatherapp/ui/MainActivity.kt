@@ -17,7 +17,6 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
@@ -31,7 +30,6 @@ import com.weatherapp.weatherapp.data.forecastModels.ForecastData
 import com.weatherapp.weatherapp.data.weatherModels.CurrentWeather
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
 import com.weatherapp.weatherapp.databinding.BottomSheetLayoutBinding
-import com.weatherapp.weatherapp.localstorage.database.WeatherDatabase
 import com.weatherapp.weatherapp.network.RetrofitInstance
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +40,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -49,7 +48,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dialog: BottomSheetDialog
     private var city: String = "nairobi"
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var database: WeatherDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-
                 if (query!= null){
                     city = query
                 }
@@ -71,7 +68,6 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 return false
             }
-
         })
         getCurrentWeather(city)
         binding.tvForecast.setOnClickListener {
@@ -80,11 +76,6 @@ class MainActivity : AppCompatActivity() {
         binding.tvLocation.setOnClickListener {
             fetchLocation()
         }
-        database = Room.databaseBuilder(
-            applicationContext,
-            WeatherDatabase::class.java,
-            "weather_database"
-        ).build()
     }
 
     private fun fetchLocation() {
@@ -120,11 +111,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openDialog() {
-        // Check if the dialog is already showing
         if (dialog.isShowing) {
             return
         }
-        // Proceed to get forecast and update the UI
         getForecast(city)
         sheetLayoutBinding.rvForecast.apply {
             setHasFixedSize(true)
@@ -162,12 +151,10 @@ class MainActivity : AppCompatActivity() {
                     loadCachedForecast(city)
                     return@launch
                 }
-
                 if (response.isSuccessful && response.body() != null) {
                     withContext(Dispatchers.Main) {
                         val data = response.body()!!
                         saveToLocalStorage("forecast_$city", data) // Save forecast data for specific city
-
                         val forecastArray = data.list as ArrayList<ForecastData>
                         val adapter = ForecastAdapter(forecastArray)
                         sheetLayoutBinding.rvForecast.adapter = adapter
@@ -226,7 +213,6 @@ class MainActivity : AppCompatActivity() {
                     loadCachedWeather(city)
                     return@launch
                 }
-
                 if (response.isSuccessful && response.body() != null) {
                     withContext(Dispatchers.Main) {
                         val data = response.body()!!
@@ -235,7 +221,6 @@ class MainActivity : AppCompatActivity() {
                         val iconId = data.weather[0].icon
                         val imgUrl = "https://openweathermap.org/img/wn/$iconId@4x.png"
                         Picasso.get().load(imgUrl).into(binding.imgWeather)
-
                         binding.tvSunset.text = dateFormatConverter(data.sys.sunset.toLong())
                         binding.tvSunrise.text = dateFormatConverter(data.sys.sunrise.toLong())
                         binding.apply {
@@ -302,7 +287,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveToLocalStorage(key: String, data: Any) {
         val json = Gson().toJson(data)
-        sharedPreferences.edit().putString(key, json).apply()
+        sharedPreferences.edit { putString(key, json) }
     }
 
     private fun <T> getFromLocalStorage(key: String, classType: Class<T>): T? {
