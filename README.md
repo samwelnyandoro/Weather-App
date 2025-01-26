@@ -50,7 +50,7 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 1. **📥 Clone the Repository**
 
    ```bash
-   git clone https://github.com/samwelnyandoro/Larana-Weather-App.git
+   git clone https://github.com/samwelnyandoro/Weather-App.git
    ```
    ```bash
    cd Weather-App
@@ -134,6 +134,12 @@ Contributions are welcome! Please follow these steps:
 3. ✏️ Commit your changes: `git commit -m 'Add some feature'`.
 4. 📤 Push to the branch: `git push origin feature-name`.
 5. 🔄 Submit a pull request.
+
+## 📥 APK Download
+
+- **You can download the APK for the Larana Weather App from the following link:**
+
+[Download APK](https://github.com/samwelnyandoro/Weather-App/releases/download/v1.0/LaranaWeatherApp-v1.0-build1.apk)
 
 ## 📜 License
 
