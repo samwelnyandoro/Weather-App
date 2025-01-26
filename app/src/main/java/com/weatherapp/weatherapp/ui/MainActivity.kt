@@ -24,7 +24,6 @@ import com.weatherapp.weatherapp.adapter.RvAdapter
 import com.weatherapp.weatherapp.data.forecastModels.ForecastData
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
 import com.weatherapp.weatherapp.databinding.BottomSheetLayoutBinding
-import com.weatherapp.weatherapp.fragment.PollutionFragment
 import com.weatherapp.weatherapp.utils.RetrofitInstance
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
