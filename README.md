@@ -45,6 +45,8 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 
    ```bash
    git clone https://github.com/samwelnyandoro/Weather-App.git
+   ```
+   ```bash
    cd Weather-App
    ```
 
