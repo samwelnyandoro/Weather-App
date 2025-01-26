@@ -1,4 +1,4 @@
-package com.mkrdeveloper.weatherappexample.data.pollutionModels
+package com.weatherapp.weatherapp.data.pollutionModels
 
 data class Coord(
     val lat: Double,

@@ -1,8 +1,8 @@
-package com.mkrdeveloper.weatherappexample.data
+package com.weatherapp.weatherapp.data
 
-import com.mkrdeveloper.weatherappexample.data.forecastModels.Forecast
-import com.mkrdeveloper.weatherappexample.data.models.CurrentWeather
-import com.mkrdeveloper.weatherappexample.data.pollutionModels.PollutionData
+import com.weatherapp.weatherapp.data.forecastModels.Forecast
+import com.weatherapp.weatherapp.data.models.CurrentWeather
+import com.weatherapp.weatherapp.data.pollutionModels.PollutionData
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

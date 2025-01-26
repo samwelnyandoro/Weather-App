@@ -1,4 +1,4 @@
-package com.mkrdeveloper.weatherappexample.data.forecastModels
+package com.weatherapp.weatherapp.data.forecastModels
 
 data class Main(
     val feels_like: Double,
