@@ -289,7 +289,7 @@
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
-                    android:src="@drawable/pressure" />
+                    android:src="@drawable/ic_pressure" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -361,7 +361,7 @@
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
-                    android:src="@drawable/humidity" />
+                    android:src="@drawable/ic_humidity" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -397,7 +397,7 @@
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
-                    android:src="@drawable/wind" />
+                    android:src="@drawable/ic_wind" />
 
                 <TextView
                     android:layout_width="wrap_content"
