@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.weatherapp.weatherapp"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -63,6 +63,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.android.networking)
+    implementation (libs.retrofit)
+    implementation(libs.androidx.swiperefreshlayout)
+    implementation ("com.google.android.gms:play-services-location:21.3.0")
+    // Gson Converter
+    implementation (libs.converter.gson)
+    implementation (libs.converter.scalars)
     implementation (libs.coil.kt.coil)
     implementation (libs.shimmer)
     implementation (libs.lottie)
@@ -70,4 +76,6 @@ dependencies {
     implementation (libs.ssp.android)
     implementation (libs.sdp.android)
     implementation (libs.koin.android)
+    implementation(libs.okhttp)  // For OkHttp
+    implementation(libs.logging.interceptor)
 }

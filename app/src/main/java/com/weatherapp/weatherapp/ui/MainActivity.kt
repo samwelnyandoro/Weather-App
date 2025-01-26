@@ -11,6 +11,7 @@ import android.location.Criteria
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -23,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private var today: String? = null
     private var mProgressBar: ProgressDialog? = null
     private var mainAdapter: MainAdapter? = null
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private val modelMain: MutableList<ModelMain> = ArrayList()
     private lateinit var binding: ActivityMainBinding
     private lateinit var toolbarBinding: ToolbarBinding
@@ -70,10 +73,27 @@ class MainActivity : AppCompatActivity(), LocationListener {
         val myVersion = Build.VERSION.SDK_INT
         if (myVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
             if (checkIfAlreadyhavePermission() && checkIfAlreadyhavePermission2()) {
+                // Permissions granted, proceed to fetch location
+                getLatlong()
             } else {
                 requestPermissions(permissionArrays, 101)
             }
         }
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
+        swipeRefreshLayout.setOnRefreshListener {
+            if (isNetworkConnected()) {
+                // Call methods to refresh weather data
+                getCurrentWeather()
+                getListWeather()
+            } else {
+                // Show a message if there is no internet
+                Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+            }
+
+            // After data is fetched or error occurs, stop the refreshing animation
+            swipeRefreshLayout.isRefreshing = false
+        }
+
 
         val dateNow = Calendar.getInstance().time
         today = DateFormat.format("EEE", dateNow) as String
@@ -133,7 +153,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         val provider = locationManager.getBestProvider(criteria, true)
         val location = locationManager.getLastKnownLocation(provider.toString())
         if (location != null) {
-            onLocationChanged(location)
+            onLocationChanged(location) // Successfully retrieved location
         } else {
             locationManager.requestLocationUpdates(provider.toString(), 20000, 0f, this)
         }
@@ -142,8 +162,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
     override fun onLocationChanged(location: Location) {
         lng = location.longitude
         lat = location.latitude
-        getCurrentWeather()
-        getListWeather()
+        getCurrentWeather() // Fetch current weather after getting location
+        getListWeather() // Fetch weather forecast after getting location
     }
 
     private fun getCurrentWeather() {
@@ -171,8 +191,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         toolbarBinding.tvName.text = strName
                         binding.tvTemperature.text =
                             String.format(Locale.getDefault(), "%.0f°C", dblTemperature)
-                        binding.tvWindvelocity.text = getString(R.string.wind_velocity, strWindvelocity)
-                        binding.tvHumidity.text = getString(R.string.humidityy, strHumidity)
+                        binding.tvWindvelocity.text =
+                            "Wind Velocity $strWindvelocity km/h"
+                        binding.tvHumidity.text = "Humidity $strHumidity %"
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         Toast.makeText(
@@ -303,6 +324,11 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 getLatlong()
             }
         }
+    }
+    private fun isNetworkConnected(): Boolean {
+        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
     }
 
     @Deprecated("Deprecated in Java")
