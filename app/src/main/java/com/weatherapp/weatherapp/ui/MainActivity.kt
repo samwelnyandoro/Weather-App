@@ -24,7 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.weatherapp.weatherapp.R
-import com.weatherapp.weatherapp.adapter.RvAdapter
+import com.weatherapp.weatherapp.adapter.ForecastAdapter
 import com.weatherapp.weatherapp.data.forecastModels.Forecast
 import com.weatherapp.weatherapp.data.forecastModels.ForecastData
 import com.weatherapp.weatherapp.data.weatherModels.CurrentWeather
@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                     saveToLocalStorage("forecast", data)
 
                     val forecastArray = data.list as ArrayList<ForecastData>
-                    val adapter = RvAdapter(forecastArray)
+                    val adapter = ForecastAdapter(forecastArray)
                     sheetLayoutBinding.rvForecast.adapter = adapter
                     sheetLayoutBinding.tvSheet.text = "Five days forecast in ${data.city.name}"
                 }
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
         if (cachedData != null) {
             withContext(Dispatchers.Main) {
                 val forecastArray = cachedData.list as ArrayList<ForecastData>
-                val adapter = RvAdapter(forecastArray)
+                val adapter = ForecastAdapter(forecastArray)
                 sheetLayoutBinding.rvForecast.adapter = adapter
                 sheetLayoutBinding.tvSheet.text = "Five days forecast in ${cachedData.city.name}"
             }
