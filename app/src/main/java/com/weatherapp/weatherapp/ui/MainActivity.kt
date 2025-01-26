@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openDialog() {
-        getForecast()
+        getForecast(city)
         sheetLayoutBinding.rvForecast.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@MainActivity, 1, RecyclerView.HORIZONTAL, false)
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("SetTextI18n")
-    private fun getForecast() {
+    private fun getForecast(city: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             // Try fetching from API
             val response = try {
@@ -141,18 +141,18 @@ class MainActivity : AppCompatActivity() {
                 )
             } catch (e: IOException) {
                 showToast("app error: ${e.message}")
-                loadCachedForecast()
+                loadCachedForecast(city) // Load cached forecast data for any city
                 return@launch
             } catch (e: HttpException) {
                 showToast("http error: ${e.message}")
-                loadCachedForecast()
+                loadCachedForecast(city) // Load cached forecast data for any city
                 return@launch
             }
 
             if (response.isSuccessful && response.body() != null) {
                 withContext(Dispatchers.Main) {
                     val data = response.body()!!
-                    saveToLocalStorage("forecast", data)
+                    saveToLocalStorage("forecast_$city", data) // Save forecast data for specific city
 
                     val forecastArray = data.list as ArrayList<ForecastData>
                     val adapter = ForecastAdapter(forecastArray)
@@ -160,13 +160,13 @@ class MainActivity : AppCompatActivity() {
                     sheetLayoutBinding.tvSheet.text = "Five days forecast in ${data.city.name}"
                 }
             } else {
-                loadCachedForecast()
+                loadCachedForecast(city) // Fallback to cached data if API response fails
             }
         }
     }
 
-    private suspend fun loadCachedForecast() {
-        val cachedData = getFromLocalStorage("forecast", Forecast::class.java)
+    private suspend fun loadCachedForecast(city: String) {
+        val cachedData = getFromLocalStorage("forecast_$city", Forecast::class.java)
         if (cachedData != null) {
             withContext(Dispatchers.Main) {
                 val forecastArray = cachedData.list as ArrayList<ForecastData>
@@ -192,18 +192,18 @@ class MainActivity : AppCompatActivity() {
                 )
             } catch (e: IOException) {
                 showToast("app error: ${e.message}")
-                loadCachedWeather()
+                loadCachedWeather(city) // Load cached weather data for any city
                 return@launch
             } catch (e: HttpException) {
                 showToast("http error: ${e.message}")
-                loadCachedWeather()
+                loadCachedWeather(city) // Load cached weather data for any city
                 return@launch
             }
 
             if (response.isSuccessful && response.body() != null) {
                 withContext(Dispatchers.Main) {
                     val data = response.body()!!
-                    saveToLocalStorage("current_weather", data)
+                    saveToLocalStorage("current_weather_$city", data) // Save data for specific city
 
                     // Update UI
                     val iconId = data.weather[0].icon
@@ -227,13 +227,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                loadCachedWeather()
+                loadCachedWeather(city) // Fallback to cached data if API response fails
             }
         }
     }
 
-    private suspend fun loadCachedWeather() {
-        val cachedData = getFromLocalStorage("current_weather", CurrentWeather::class.java)
+    private suspend fun loadCachedWeather(city: String) {
+        val cachedData = getFromLocalStorage("current_weather_$city", CurrentWeather::class.java)
         if (cachedData != null) {
             withContext(Dispatchers.Main) {
                 // Update UI using cached data
