@@ -5,6 +5,7 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 ## Table of Contents
 
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Requirements](#requirements)
 - [Setup and Installation](#setup-and-installation)
 - [Build and Run Instructions](#build-and-run-instructions)
@@ -21,6 +22,14 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 - Elegant and user-friendly interface.
 - Supports Celsius temperature units.
 - Offline support using Room for local data storage.
+
+## Screenshots
+
+**Home Screen**  
+![Home Screen](screenshots/Screenshot_20250126_191628.png)
+
+**Weather Details**  
+![Weather Details](screenshots/Screenshot_20250126_191642.png)
 
 ## Requirements
 
