@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".MainActivity"
-    >
-
-
+    tools:context=".ui.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,8 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
         android:padding="10dp">
-
-
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/glMainLocation"
@@ -76,12 +71,9 @@
                 android:layout_height="wrap_content"
                 app:iconifiedByDefault="false"
                 app:queryHint="Search here...." />
-
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-
-
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/glMainTemp"
