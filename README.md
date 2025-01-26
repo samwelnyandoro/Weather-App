@@ -139,7 +139,7 @@ Contributions are welcome! Please follow these steps:
 
 - **You can download the APK for the Larana Weather App from the following link:**
 
-[![Download on Google Play](https://upload.wikimedia.org/wikipedia/commons/5/5f/Google_Play_Store_Logo_2019.png)](https://github.com/samwelnyandoro/Weather-App/releases/download/v1.0/LaranaWeatherApp-v1.0-build1.apk)
+[Download APK](https://github.com/samwelnyandoro/Weather-App/releases/download/v1.0/LaranaWeatherApp-v1.0-build1.apk)
 
 ## 📜 License
 
