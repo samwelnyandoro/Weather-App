@@ -21,7 +21,7 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 - Interactive search feature for finding weather in specific cities.
 - Elegant and user-friendly interface.
 - Supports Celsius temperature units.
-- Offline support using Room for local data storage.
+- Offline support using SharedPreferences for local data storage.
 
 ## Screenshots
 
@@ -32,7 +32,10 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 ![Weather Details](screenshots/Screenshot_20250126_191642.png)
 
 **Offline Screen**
-![Offline Screen](screenshots/Screenshot_20250126_192625.png)
+![Offline Screen](screenshots/Screenshot_20250126_201233.png)
+
+**Offline Weather Details**
+![Offline Weather Details](screenshots/Screenshot_20250126_201250.png)
 
 ## Requirements
 

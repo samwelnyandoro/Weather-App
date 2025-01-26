@@ -120,6 +120,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openDialog() {
+        // Check if the dialog is already showing
+        if (dialog.isShowing) {
+            return
+        }
+        // Proceed to get forecast and update the UI
         getForecast(city)
         sheetLayoutBinding.rvForecast.apply {
             setHasFixedSize(true)
@@ -128,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog.show()
     }
+
 
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -183,8 +189,9 @@ class MainActivity : AppCompatActivity() {
         if (cachedData != null) {
             withContext(Dispatchers.Main) {
                 // Show dialog with cached data
-                openDialog()
-
+                if (!dialog.isShowing) {
+                    openDialog() // Open the dialog
+                }
                 val forecastArray = cachedData.list as ArrayList<ForecastData>
                 val adapter = ForecastAdapter(forecastArray)
                 sheetLayoutBinding.rvForecast.adapter = adapter
@@ -302,8 +309,11 @@ class MainActivity : AppCompatActivity() {
         val json = sharedPreferences.getString(key, null)
         return if (json != null) Gson().fromJson(json, classType) else null
     }
-
-
+    private fun dismissDialog() {
+        if (dialog.isShowing) {
+            dialog.dismiss()
+        }
+    }
 
     private fun dateFormatConverter(date: Long): String {
         return SimpleDateFormat(
