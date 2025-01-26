@@ -1,13 +1,15 @@
 package com.weatherapp.weatherapp.adapter
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import com.weatherapp.weatherapp.data.forecastModels.ForecastData
 import com.weatherapp.weatherapp.databinding.RvItemLayoutBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.collections.get
 
 class RvAdapter( private val forecastArray: ArrayList<ForecastData>) : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
 
@@ -20,6 +22,7 @@ class RvAdapter( private val forecastArray: ArrayList<ForecastData>) : RecyclerV
        return ViewHolder(RvItemLayoutBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = forecastArray[position]
         holder.binding.apply {
@@ -35,6 +38,7 @@ class RvAdapter( private val forecastArray: ArrayList<ForecastData>) : RecyclerV
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun displayTime(dtTxt: String): CharSequence? {
         val input = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val output = DateTimeFormatter.ofPattern("MM-dd HH:mm")

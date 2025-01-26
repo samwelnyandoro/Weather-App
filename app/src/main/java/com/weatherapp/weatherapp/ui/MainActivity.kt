@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var pollutionFragment: PollutionFragment
 
-    private var city: String = "berlin"
+    private var city: String = "nairobi"
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
