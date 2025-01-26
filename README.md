@@ -31,6 +31,9 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 **Weather Details**  
 ![Weather Details](screenshots/Screenshot_20250126_191642.png)
 
+**Offline Screen**
+![Offline Screen](screenshots/Screenshot_20250126_192625.png)
+
 ## Requirements
 
 - **Android Studio**: Version Meerkat or newer.
