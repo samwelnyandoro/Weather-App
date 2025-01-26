@@ -62,20 +62,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.android.networking)
-    implementation (libs.retrofit)
-    implementation(libs.androidx.swiperefreshlayout)
-    implementation ("com.google.android.gms:play-services-location:21.3.0")
-    // Gson Converter
-    implementation (libs.converter.gson)
-    implementation (libs.converter.scalars)
-    implementation (libs.coil.kt.coil)
-    implementation (libs.shimmer)
-    implementation (libs.lottie)
-    //scalable size unit¬¬support for different screen sizes
-    implementation (libs.ssp.android)
-    implementation (libs.sdp.android)
-    implementation (libs.koin.android)
-    implementation(libs.okhttp)  // For OkHttp
-    implementation(libs.logging.interceptor)
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
+    // Picasso
+    implementation(libs.picasso)
+    // BarChart
+    implementation(libs.mpandroidchart)
+    // Location
+    implementation(libs.play.services.location)
 }
