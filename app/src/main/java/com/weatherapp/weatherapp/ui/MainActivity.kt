@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -128,39 +129,51 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
+    }
+
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("SetTextI18n")
     private fun getForecast(city: String) {
         lifecycleScope.launch(Dispatchers.IO) {
-            // Try fetching from API
-            val response = try {
-                RetrofitInstance.api.getForecast(
-                    city,
-                    "metric",
-                    applicationContext.getString(R.string.api_key)
-                )
-            } catch (e: IOException) {
-                showToast("app error: ${e.message}")
-                loadCachedForecast(city) // Load cached forecast data for any city
-                return@launch
-            } catch (e: HttpException) {
-                showToast("http error: ${e.message}")
-                loadCachedForecast(city) // Load cached forecast data for any city
-                return@launch
-            }
+            if (isNetworkAvailable()) {
+                // Network is available, try fetching data from the API
+                val response = try {
+                    RetrofitInstance.api.getForecast(
+                        city,
+                        "metric",
+                        applicationContext.getString(R.string.api_key)
+                    )
+                } catch (e: IOException) {
+                    // Network error, load cached data silently
+                    loadCachedForecast(city)
+                    return@launch
+                } catch (e: HttpException) {
+                    // HTTP error, load cached data silently
+                    loadCachedForecast(city)
+                    return@launch
+                }
 
-            if (response.isSuccessful && response.body() != null) {
-                withContext(Dispatchers.Main) {
-                    val data = response.body()!!
-                    saveToLocalStorage("forecast_$city", data) // Save forecast data for specific city
+                if (response.isSuccessful && response.body() != null) {
+                    withContext(Dispatchers.Main) {
+                        val data = response.body()!!
+                        saveToLocalStorage("forecast_$city", data) // Save forecast data for specific city
 
-                    val forecastArray = data.list as ArrayList<ForecastData>
-                    val adapter = ForecastAdapter(forecastArray)
-                    sheetLayoutBinding.rvForecast.adapter = adapter
-                    sheetLayoutBinding.tvSheet.text = "Five days forecast in ${data.city.name}"
+                        val forecastArray = data.list as ArrayList<ForecastData>
+                        val adapter = ForecastAdapter(forecastArray)
+                        sheetLayoutBinding.rvForecast.adapter = adapter
+                        sheetLayoutBinding.tvSheet.text = "Five days forecast in ${data.city.name}"
+                    }
+                } else {
+                    // Response is unsuccessful, load cached data silently
+                    loadCachedForecast(city)
                 }
             } else {
-                loadCachedForecast(city) // Fallback to cached data if API response fails
+                // No network available, immediately fallback to cached data
+                loadCachedForecast(city)
             }
         }
     }
@@ -169,65 +182,76 @@ class MainActivity : AppCompatActivity() {
         val cachedData = getFromLocalStorage("forecast_$city", Forecast::class.java)
         if (cachedData != null) {
             withContext(Dispatchers.Main) {
+                // Show dialog with cached data
+                openDialog()
+
                 val forecastArray = cachedData.list as ArrayList<ForecastData>
                 val adapter = ForecastAdapter(forecastArray)
                 sheetLayoutBinding.rvForecast.adapter = adapter
                 sheetLayoutBinding.tvSheet.text = "Five days forecast in ${cachedData.city.name}"
             }
         } else {
-            showToast("No cached forecast data available.")
+            withContext(Dispatchers.Main) {
+                // still show a message if cached data is unavailable
+                showToast("No cached forecast data available.")
+            }
         }
     }
-
 
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("SetTextI18n")
     private fun getCurrentWeather(city: String) {
         lifecycleScope.launch(Dispatchers.IO) {
-            val response = try {
-                RetrofitInstance.api.getCurrentWeather(
-                    city,
-                    "metric",
-                    applicationContext.getString(R.string.api_key)
-                )
-            } catch (e: IOException) {
-                showToast("app error: ${e.message}")
-                loadCachedWeather(city) // Load cached weather data for any city
-                return@launch
-            } catch (e: HttpException) {
-                showToast("http error: ${e.message}")
-                loadCachedWeather(city) // Load cached weather data for any city
-                return@launch
-            }
+            if (isNetworkAvailable()) {
+                // Network is available, try fetching data from the API
+                val response = try {
+                    RetrofitInstance.api.getCurrentWeather(
+                        city,
+                        "metric",
+                        applicationContext.getString(R.string.api_key)
+                    )
+                } catch (e: IOException) {
+                    // Network error, load cached data silently
+                    loadCachedWeather(city)
+                    return@launch
+                } catch (e: HttpException) {
+                    // HTTP error, load cached data silently
+                    loadCachedWeather(city)
+                    return@launch
+                }
 
-            if (response.isSuccessful && response.body() != null) {
-                withContext(Dispatchers.Main) {
-                    val data = response.body()!!
-                    saveToLocalStorage("current_weather_$city", data) // Save data for specific city
+                if (response.isSuccessful && response.body() != null) {
+                    withContext(Dispatchers.Main) {
+                        val data = response.body()!!
+                        saveToLocalStorage("current_weather_$city", data) // Save data for specific city
+                        // Update UI
+                        val iconId = data.weather[0].icon
+                        val imgUrl = "https://openweathermap.org/img/wn/$iconId@4x.png"
+                        Picasso.get().load(imgUrl).into(binding.imgWeather)
 
-                    // Update UI
-                    val iconId = data.weather[0].icon
-                    val imgUrl = "https://openweathermap.org/img/wn/$iconId@4x.png"
-                    Picasso.get().load(imgUrl).into(binding.imgWeather)
-
-                    binding.tvSunset.text = dateFormatConverter(data.sys.sunset.toLong())
-                    binding.tvSunrise.text = dateFormatConverter(data.sys.sunrise.toLong())
-                    binding.apply {
-                        tvStatus.text = data.weather[0].description
-                        tvWind.text = "${data.wind.speed} KM/H"
-                        tvLocation.text = "${data.name}\n${data.sys.country}"
-                        tvTemp.text = "${data.main.temp.toInt()}°C"
-                        tvFeelsLike.text = "Feels like: ${data.main.feels_like.toInt()}°C"
-                        tvMinTemp.text = "Min temp: ${data.main.temp_min.toInt()}°C"
-                        tvMaxTemp.text = "Max temp: ${data.main.temp_max.toInt()}°C"
-                        tvHumidity.text = "${data.main.humidity} %"
-                        tvRealfeel.text = "${data.main.feels_like.toInt()}°C"
-                        tvPressure.text = "${data.main.pressure} hPa"
-                        tvUpdateTime.text = "Last Update: ${dateFormatConverter(data.dt.toLong())}"
+                        binding.tvSunset.text = dateFormatConverter(data.sys.sunset.toLong())
+                        binding.tvSunrise.text = dateFormatConverter(data.sys.sunrise.toLong())
+                        binding.apply {
+                            tvStatus.text = data.weather[0].description
+                            tvWind.text = "${data.wind.speed} KM/H"
+                            tvLocation.text = "${data.name}\n${data.sys.country}"
+                            tvTemp.text = "${data.main.temp.toInt()}°C"
+                            tvFeelsLike.text = "Feels like: ${data.main.feels_like.toInt()}°C"
+                            tvMinTemp.text = "Min temp: ${data.main.temp_min.toInt()}°C"
+                            tvMaxTemp.text = "Max temp: ${data.main.temp_max.toInt()}°C"
+                            tvHumidity.text = "${data.main.humidity} %"
+                            tvRealfeel.text = "${data.main.feels_like.toInt()}°C"
+                            tvPressure.text = "${data.main.pressure} hPa"
+                            tvUpdateTime.text = "Last Update: ${dateFormatConverter(data.dt.toLong())}"
+                        }
                     }
+                } else {
+                    // API response failed, fallback to cached data silently
+                    loadCachedWeather(city)
                 }
             } else {
-                loadCachedWeather(city) // Fallback to cached data if API response fails
+                // No network available, immediately fallback to cached data
+                loadCachedWeather(city)
             }
         }
     }
@@ -254,7 +278,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
-            showToast("No cached weather data available.")
+            // show a message if cached data is unavailable
+            withContext(Dispatchers.Main) {
+                showToast("No cached weather data available.")
+            }
         }
     }
 
