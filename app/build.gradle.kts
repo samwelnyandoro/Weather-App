@@ -65,7 +65,7 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-
+    // adapt to different screen sizes
     implementation (libs.sdp.android)
     implementation (libs.ssp.android)
     // Coroutines
