@@ -31,7 +31,7 @@ import com.weatherapp.weatherapp.data.weatherModels.CurrentWeather
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
 import com.weatherapp.weatherapp.databinding.BottomSheetLayoutBinding
 import com.weatherapp.weatherapp.localstorage.database.WeatherDatabase
-import com.weatherapp.weatherapp.utils.RetrofitInstance
+import com.weatherapp.weatherapp.network.RetrofitInstance
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

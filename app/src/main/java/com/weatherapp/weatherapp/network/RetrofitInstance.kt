@@ -1,4 +1,4 @@
-package com.weatherapp.weatherapp.utils
+package com.weatherapp.weatherapp.network
 
 import com.weatherapp.weatherapp.data.ApiInterface
 import retrofit2.Retrofit

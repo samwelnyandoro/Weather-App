@@ -1,4 +1,4 @@
-package com.weatherapp.weatherapp.utils
+package com.weatherapp.weatherapp.network
 
 object Util {
 
