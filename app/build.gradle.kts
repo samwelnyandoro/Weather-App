@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-    id("kotlin-kapt")
 }
 
 android {
@@ -20,24 +19,12 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
+        release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "OPENWEATHERMAP_BASEURL", "\"${project.findProperty("OPENWEATHERMAP_BASEURL") ?: ""}\"")
-            buildConfigField("String", "OPENWEATHERMAP_API_KEY", "\"${project.findProperty("OPENWEATHERMAP_API_KEY") ?: ""}\"")
-        }
-
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            buildConfigField("String", "OPENWEATHERMAP_BASEURL", "\"${project.findProperty("OPENWEATHERMAP_BASEURL") ?: ""}\"")
-            buildConfigField("String", "OPENWEATHERMAP_API_KEY", "\"${project.findProperty("OPENWEATHERMAP_API_KEY") ?: ""}\"")
         }
     }
     compileOptions {
@@ -77,8 +64,5 @@ dependencies {
     // Location
     implementation(libs.play.services.location)
     // offline storage
-    implementation (libs.androidx.room.runtime)
-    kapt (libs.androidx.room.compiler)
     implementation (libs.gson)
-    implementation (libs.androidx.room.ktx)
 }
