@@ -257,16 +257,16 @@ class MainActivity : AppCompatActivity() {
                 binding.tvSunrise.text = dateFormatConverter(cachedData.sys.sunrise.toLong())
                 binding.apply {
                     tvStatus.text = cachedData.weather[0].description
-                    tvWind.text = "${cachedData.wind.speed} KM/H"
-                    tvLocation.text = "${cachedData.name}\n${cachedData.sys.country}"
-                    tvTemp.text = "${cachedData.main.temp.toInt()}°C"
-                    tvFeelsLike.text = "Feels like: ${cachedData.main.feels_like.toInt()}°C"
-                    tvMinTemp.text = "Min temp: ${cachedData.main.temp_min.toInt()}°C"
-                    tvMaxTemp.text = "Max temp: ${cachedData.main.temp_max.toInt()}°C"
-                    tvHumidity.text = "${cachedData.main.humidity} %"
-                    tvRealfeel.text = "${cachedData.main.feels_like.toInt()}°C"
-                    tvPressure.text = "${cachedData.main.pressure} hPa"
-                    tvUpdateTime.text = "Last Update: ${dateFormatConverter(cachedData.dt.toLong())}"
+                    tvWind.text = getString(R.string.wind_speedd, cachedData.wind.speed)
+                    tvLocation.text = getString(R.string.locationdata, cachedData.name, cachedData.sys.country)
+                    tvTemp.text = getString(R.string.temperature, cachedData.main.temp.toInt())
+                    tvFeelsLike.text = getString(R.string.feels_like_desc, cachedData.main.feels_like.toInt())
+                    tvMinTemp.text = getString(R.string.min_temp_show, cachedData.main.temp_min.toInt())
+                    tvMaxTemp.text = getString(R.string.max_temp_show, cachedData.main.temp_max.toInt())
+                    tvHumidity.text = getString(R.string.humidity_show, cachedData.main.humidity)
+                    tvRealfeel.text = getString(R.string.real_feel, cachedData.main.feels_like.toInt())
+                    tvPressure.text = getString(R.string.pressure_show, cachedData.main.pressure)
+                    tvUpdateTime.text = getString(R.string.last_update, dateFormatConverter(cachedData.dt.toLong()))
                 }
             }
         } else {
