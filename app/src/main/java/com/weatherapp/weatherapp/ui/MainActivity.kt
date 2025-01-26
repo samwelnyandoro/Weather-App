@@ -27,7 +27,7 @@ import com.weatherapp.weatherapp.R
 import com.weatherapp.weatherapp.adapter.ForecastAdapter
 import com.weatherapp.weatherapp.data.forecastModels.Forecast
 import com.weatherapp.weatherapp.data.forecastModels.ForecastData
-import com.weatherapp.weatherapp.data.weatherModels.CurrentWeather
+import com.weatherapp.weatherapp.data.currentWeatherModels.CurrentWeather
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
 import com.weatherapp.weatherapp.databinding.BottomSheetLayoutBinding
 import com.weatherapp.weatherapp.network.RetrofitInstance

@@ -1,24 +1,24 @@
-package com.weatherapp.weatherapp.data
+package com.weatherapp.weatherapp.network
 
 import com.weatherapp.weatherapp.data.forecastModels.Forecast
-import com.weatherapp.weatherapp.data.weatherModels.CurrentWeather
+import com.weatherapp.weatherapp.data.currentWeatherModels.CurrentWeather
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface ApiInterface {
+interface ApiService {
 
     @GET("weather?")
     suspend fun getCurrentWeather(
         @Query("q") city : String,
         @Query("units") units : String,
         @Query("appid") apiKey : String,
-    ):Response<CurrentWeather>
+    ): Response<CurrentWeather>
 
     @GET("forecast?")
     suspend fun getForecast(
-        @Query ("q") city: String,
+        @Query("q") city: String,
         @Query("units") units : String,
         @Query("appid") apiKey : String,
-    ) :Response<Forecast>
+    ) : Response<Forecast>
 }
