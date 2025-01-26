@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        android:padding="10dp">
+        android:padding="@dimen/_10sdp">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/glMainLocation"
@@ -28,8 +28,8 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
+        android:layout_marginStart="@dimen/_1sdp"
+        android:layout_marginEnd="@dimen/_1sdp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/glMainLocation"
@@ -44,7 +44,7 @@
             android:gravity="center_horizontal"
             android:text="@string/location"
             android:textColor="@color/black"
-            android:textSize="34sp"
+            android:textSize="@dimen/_25ssp"
             android:textStyle="bold" />
 
         <TextView
@@ -54,16 +54,16 @@
             android:gravity="center_horizontal"
             android:text="@string/updated_at"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/_20ssp" />
 
         <androidx.cardview.widget.CardView
-            app:cardElevation="8dp"
-            android:layout_margin="16dp"
+            app:cardElevation="@dimen/_8sdp"
+            android:layout_margin="@dimen/_16sdp"
             android:id="@+id/cardSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/semi_transparent"
-            app:cardCornerRadius="10dp">
+            app:cardCornerRadius="@dimen/_10sdp">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:text="@string/clear_sky"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="@dimen/_24ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -108,10 +108,10 @@
             android:id="@+id/tv_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/_16sdp"
             android:text="@string/_24_c"
             android:textColor="@color/black"
-            android:textSize="80sp"
+            android:textSize="@dimen/_50ssp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/img_weather"
             app:layout_constraintHorizontal_bias="0.5"
@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:text="@string/min_temp"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="@dimen/_20ssp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_max_temp"
             app:layout_constraintEnd_toStartOf="@+id/tv_max_temp"
             app:layout_constraintHorizontal_bias="0.5"
@@ -135,10 +135,10 @@
             android:id="@+id/tv_max_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:text="@string/max_temp"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="@dimen/_20ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv_min_temp"
@@ -146,8 +146,8 @@
 
         <ImageView
             android:id="@+id/img_weather"
-            android:layout_width="220dp"
-            android:layout_height="200dp"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_temp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -159,13 +159,20 @@
             android:id="@+id/tv_feels_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/_30sdp"
             android:text="@string/feels_like"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="@dimen/_20ssp"
             app:layout_constraintEnd_toEndOf="@+id/img_weather"
             app:layout_constraintStart_toStartOf="@+id/tv_temp"
             app:layout_constraintTop_toBottomOf="@+id/tv_temp" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -179,10 +186,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="25dp"
+        android:layout_margin="@dimen/_25sdp"
         android:backgroundTint="@color/semi_transparent"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="8dp"
+        app:cardCornerRadius="@dimen/_10sdp"
+        app:cardElevation="@dimen/_8sdp"
         app:layout_constraintBottom_toTopOf="@+id/glMainCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -192,8 +199,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/semi_transparent"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_1sdp">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/glVMiddle"
@@ -233,7 +240,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_margin="@dimen/_6sdp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/glHtop"
                 app:layout_constraintEnd_toStartOf="@+id/glVLeft"
@@ -243,8 +250,8 @@
 
                 <ImageView
                     android:id="@+id/imgSunrise"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:src="@drawable/sunrise" />
 
@@ -254,7 +261,7 @@
                     android:text="@string/sunrise"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <TextView
                     android:id="@+id/tvSunrise"
@@ -263,13 +270,13 @@
                     android:layout_gravity="center"
                     android:text="05:00"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_margin="@dimen/_6sdp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/glHbottom"
                 app:layout_constraintEnd_toStartOf="@+id/glVLeft"
@@ -279,8 +286,8 @@
 
                 <ImageView
                     android:id="@+id/imgPressure"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:src="@drawable/pressure" />
 
@@ -290,7 +297,7 @@
                     android:text="@string/pressure"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <TextView
                     android:id="@+id/tvPressure"
@@ -299,13 +306,13 @@
                     android:layout_gravity="center"
                     android:text="05:00"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_margin="@dimen/_6sdp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/glHtop"
                 app:layout_constraintEnd_toStartOf="@+id/glVMiddle"
@@ -315,8 +322,8 @@
 
                 <ImageView
                     android:id="@+id/imgSunset"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:src="@drawable/sunset" />
 
@@ -326,7 +333,7 @@
                     android:text="@string/sunset"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <TextView
                     android:id="@+id/tvSunset"
@@ -335,13 +342,13 @@
                     android:layout_gravity="center"
                     android:text="05:00"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_margin="@dimen/_6sdp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/glHbottom"
                 app:layout_constraintEnd_toStartOf="@+id/glVMiddle"
@@ -351,8 +358,8 @@
 
                 <ImageView
                     android:id="@+id/imgHumidity"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:src="@drawable/humidity" />
 
@@ -362,7 +369,7 @@
                     android:text="@string/humidity"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <TextView
                     android:id="@+id/tvHumidity"
@@ -371,13 +378,13 @@
                     android:layout_gravity="center"
                     android:text="05:00"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_margin="@dimen/_6sdp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/glHtop"
                 app:layout_constraintEnd_toStartOf="@+id/glVRight"
@@ -387,8 +394,8 @@
 
                 <ImageView
                     android:id="@+id/imgWind"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:src="@drawable/wind" />
 
@@ -398,7 +405,7 @@
                     android:text="@string/wind_speed"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <TextView
                     android:id="@+id/tvWind"
@@ -407,14 +414,14 @@
                     android:layout_gravity="center"
                     android:text="05:00"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/layout_pollution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_margin="@dimen/_6sdp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/glHbottom"
                 app:layout_constraintEnd_toStartOf="@+id/glVRight"
@@ -424,8 +431,8 @@
 
                 <ImageView
                     android:id="@+id/imgPollution"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:src="@drawable/smoke" />
 
@@ -435,7 +442,7 @@
                     android:text="@string/air_quality"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <TextView
                     android:id="@+id/tvAirQual"
@@ -444,7 +451,7 @@
                     android:layout_gravity="center"
                     android:text="@string/perfect"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -465,9 +472,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="0dp"
-        android:padding="5dp"
+        android:padding="@dimen/_5sdp"
         android:text="@string/five_days_forecast"
-        android:textSize="18sp"
+        android:textSize="@dimen/_18ssp"
         app:drawableBottomCompat="@drawable/ic_down"
         app:layout_constraintBottom_toTopOf="@+id/glMainForecastBtn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -475,14 +482,5 @@
         app:layout_constraintTop_toTopOf="@+id/glMainForecastBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
