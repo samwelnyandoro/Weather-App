@@ -6,7 +6,7 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 
 - [✨ Features](#-features)
 - [🖼️ Screenshots](#-screenshots)
-- - [📥 APK Download](#-apk-download)
+- [📥 APK Download](#-apk-download)
 - [⚙️ Requirements](#-requirements)
 - [🛠️ Setup and Installation](#-setup-and-installation)
 - [🚀 Build and Run Instructions](#-build-and-run-instructions)
