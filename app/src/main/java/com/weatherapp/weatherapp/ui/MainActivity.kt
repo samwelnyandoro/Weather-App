@@ -7,9 +7,9 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
@@ -26,15 +26,8 @@ import com.weatherapp.weatherapp.adapter.RvAdapter
 import com.weatherapp.weatherapp.data.forecastModels.ForecastData
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
 import com.weatherapp.weatherapp.databinding.BottomSheetLayoutBinding
-import com.weatherapp.weatherapp.localstorage.ForecastEntity
-import com.weatherapp.weatherapp.localstorage.WeatherEntity
 import com.weatherapp.weatherapp.localstorage.database.WeatherDatabase
 import com.weatherapp.weatherapp.utils.RetrofitInstance
-import com.weatherapp.weatherapp.data.forecastModels.Main
-import com.weatherapp.weatherapp.data.forecastModels.Weather
-import com.weatherapp.weatherapp.data.forecastModels.Clouds
-import com.weatherapp.weatherapp.data.forecastModels.Sys
-import com.weatherapp.weatherapp.data.forecastModels.Wind
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
