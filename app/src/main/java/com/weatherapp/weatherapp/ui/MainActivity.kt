@@ -34,8 +34,6 @@ import com.weatherapp.weatherapp.adapter.MainAdapter
 import com.weatherapp.weatherapp.api.Apiservice
 import com.weatherapp.weatherapp.databinding.ActivityMainBinding
 import com.weatherapp.weatherapp.databinding.ToolbarBinding
-import com.weatherapp.weatherapp.fragments.FragmentNextDays
-import com.weatherapp.weatherapp.model.ModelMain
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.ParseException
