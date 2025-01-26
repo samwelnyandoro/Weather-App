@@ -50,7 +50,7 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 1. **📥 Clone the Repository**
 
    ```bash
-   git clone https://github.com/samwelnyandoro/Weather-App.git
+   git clone https://github.com/samwelnyandoro/Larana-Weather-App.git
    ```
    ```bash
    cd Weather-App
