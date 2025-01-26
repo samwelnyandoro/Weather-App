@@ -434,7 +434,7 @@
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
-                    android:src="@drawable/smoke" />
+                    android:src="@drawable/ic_feel" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -445,7 +445,7 @@
                     android:textSize="@dimen/_14ssp" />
 
                 <TextView
-                    android:id="@+id/tvAirQual"
+                    android:id="@+id/tvRealfeel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
