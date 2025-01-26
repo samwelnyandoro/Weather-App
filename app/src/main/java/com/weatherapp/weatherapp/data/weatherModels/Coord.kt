@@ -1,4 +1,4 @@
-package com.weatherapp.weatherapp.data.pollutionModels
+package com.weatherapp.weatherapp.data.weatherModels
 
 data class Coord(
     val lat: Double,

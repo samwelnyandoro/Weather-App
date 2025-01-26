@@ -1,8 +1,7 @@
 package com.weatherapp.weatherapp.data
 
 import com.weatherapp.weatherapp.data.forecastModels.Forecast
-import com.weatherapp.weatherapp.data.models.CurrentWeather
-import com.weatherapp.weatherapp.data.pollutionModels.PollutionData
+import com.weatherapp.weatherapp.data.weatherModels.CurrentWeather
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -22,13 +21,4 @@ interface ApiInterface {
         @Query("units") units : String,
         @Query("appid") apiKey : String,
     ) :Response<Forecast>
-
-
-    @GET("air_pollution?")
-    suspend fun getPollution(
-        @Query("lat") lat: Double,
-        @Query("lon") lon: Double,
-        @Query("units") units : String,
-        @Query("appid") apiKey : String
-    ): Response<PollutionData>
 }
