@@ -121,7 +121,7 @@ A simple and intuitive Android weather app built using Kotlin. The app leverages
 ## 🧩 Challenges and Solutions
 
 1. **🚧 Challenge**: Handling API rate limits.
-   - **✅ Solution**: Implemented caching with Room to store and serve data locally, reducing redundant API calls.
+   - **✅ Solution**: Implemented caching with SharedPreferences to store and serve data locally, reducing redundant API calls.
 
 2. **🚧 Challenge**: Ensuring seamless performance on low-end devices.
    - **✅ Solution**: Optimized API calls and reduced unnecessary background operations.
