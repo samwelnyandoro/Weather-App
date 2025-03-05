@@ -299,7 +299,6 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
     }
-
     private fun dateFormatConverter(date: Long): String {
         return SimpleDateFormat(
             "hh:mm a",
