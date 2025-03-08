@@ -123,7 +123,6 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetworkInfo
