@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.weatherapp.weatherapp.ui
 
 import android.Manifest
