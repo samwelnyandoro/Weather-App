@@ -79,7 +79,6 @@ class MainActivity : AppCompatActivity() {
             fetchLocation()
         }
     }
-
     private fun fetchLocation() {
         val task: Task<Location> = fusedLocationProviderClient.lastLocation
         if (ActivityCompat.checkSelfPermission(
