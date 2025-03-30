@@ -32,7 +32,6 @@ class ForecastAdapter(
         )
         return ForecastViewHolder(binding)
     }
-
     /**
      * Binds data to the ViewHolder for the given position.
      */
@@ -44,11 +43,9 @@ class ForecastAdapter(
             val iconCode = forecast.weather[0].icon
             val iconUrl = "https://openweathermap.org/img/w/$iconCode.png"
             Picasso.get().load(iconUrl).into(imgItem)
-
             // Display temperature and weather description
             tvItemTemp.text = "${forecast.main.temp.toInt()}°C"
             tvItemStatus.text = forecast.weather[0].description.capitalize()
-
             // Format and display time
             tvItemTime.text = formatDateTime(forecast.dt_txt)
         }
