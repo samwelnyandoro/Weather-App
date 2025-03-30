@@ -10,7 +10,6 @@ import com.weatherapp.weatherapp.data.forecastModels.ForecastData
 import com.weatherapp.weatherapp.databinding.RvItemLayoutBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
 /**
  * Adapter for populating the forecast data into a RecyclerView.
  */
