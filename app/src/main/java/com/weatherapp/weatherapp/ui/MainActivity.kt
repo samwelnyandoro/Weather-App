@@ -204,7 +204,7 @@ class MainActivity : AppCompatActivity() {
                         "metric",
                         applicationContext.getString(R.string.api_key)
                     )
-                } catch (e: IOException) {
+                } catch (_: IOException) {
                     // Network error, load cached data silently
                     loadCachedWeather(city)
                     return@launch
