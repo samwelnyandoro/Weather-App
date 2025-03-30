@@ -1,6 +1,5 @@
 package com.weatherapp.weatherapp.network
 
-import com.weatherapp.weatherapp.network.ApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
