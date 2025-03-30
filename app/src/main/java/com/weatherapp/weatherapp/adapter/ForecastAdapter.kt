@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter
 class ForecastAdapter(
     private val forecastList: List<ForecastData> // Changed to List for immutability
 ) : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
-
     /**
      * ViewHolder class to bind the item layout with its data.
      */
