@@ -66,7 +66,6 @@ class ForecastAdapter(
         val parsedDateTime = LocalDateTime.parse(dateTimeStr, inputFormatter)
         return outputFormatter.format(parsedDateTime)
     }
-
     /**
      * Returns the total number of forecast items.
      */
