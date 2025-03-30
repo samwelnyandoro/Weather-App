@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity() {
                     // Network error, load cached data silently
                     loadCachedWeather(city)
                     return@launch
-                } catch (e: HttpException) {
+                } catch (_: HttpException) {
                     // HTTP error, load cached data silently
                     loadCachedWeather(city)
                     return@launch
