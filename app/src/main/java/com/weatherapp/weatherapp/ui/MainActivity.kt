@@ -294,11 +294,7 @@ class MainActivity : AppCompatActivity() {
         val json = sharedPreferences.getString(key, null)
         return if (json != null) Gson().fromJson(json, classType) else null
     }
-    private fun dismissDialog() {
-        if (dialog.isShowing) {
-            dialog.dismiss()
-        }
-    }
+
     private fun dateFormatConverter(date: Long): String {
         return SimpleDateFormat(
             "hh:mm a",
